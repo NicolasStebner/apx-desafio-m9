@@ -20,7 +20,8 @@ export async function findOrCreateAuthWithCode(email:string): Promise<Auth> {
       email:cleanEmail,
       userId:newUser.id,
       code:"",
-      expires: new Date()
+      expires: new Date(),
+      codeValidated: true
     })
     return newAuth
   }

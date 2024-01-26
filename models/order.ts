@@ -30,4 +30,24 @@ export class Order{
     newOrder.data = newOrderData
     return newOrder
   }
+
+  static async getOrdersByUserId(userId:string){
+    const orders = []
+    const results = await collection.where("userId","==",userId).get()
+    if(results.docs.length){
+      results.docs.forEach((o)=>{
+        const newOrder = new Order(o.id)
+        newOrder.data = o.data()
+        orders.push(newOrder)
+      })
+      return orders
+    }
+  }
+
+  static async getOrderById(orderId:string){
+    const order = await collection.doc(orderId).get()
+    const orderInstance = new Order(order.id)
+    orderInstance.data = order.data()
+    return orderInstance
+  }
 }

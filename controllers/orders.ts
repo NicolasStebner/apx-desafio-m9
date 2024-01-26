@@ -1,22 +1,21 @@
 import { createPreference } from "lib/mercadopago";
 import { Order } from "models/order";
-
-const products = {
-  1234: {
-    title: "Mate APX",
-    price: 100,
-  },
-};
+import { productIndex } from "lib/algolia";
 
 type CreateOrderRes = {
-  url: string
+  url: string,
+  orderId:string
 }
 
 export async function createOrder(userId:string, productId:string, aditional_info): Promise<CreateOrderRes>{
-  const product = products[productId]
+  const product = await productIndex.getObject(productId, {
+    attributesToRetrieve: ["Name", "Unit cost"]
+  })
+
   if (!product) {
     throw "el prod no existe"
   }
+
   const order = await Order.createNewOrder({
     aditional_info,
     productId,
@@ -28,9 +27,9 @@ export async function createOrder(userId:string, productId:string, aditional_inf
     body: {
       items: [{
         id: productId,
-        title: product.title,
+        title: product["Name"],
         quantity: 1,
-        unit_price: 100,
+        unit_price: product["Unit cost"],
         currency_id: "ARS"
       }],
       back_urls: {
@@ -44,6 +43,17 @@ export async function createOrder(userId:string, productId:string, aditional_inf
   });
 
   return {
-    url: pref.init_point
+    url: pref.init_point,
+    orderId: order.id
   }
+}
+
+export async function getOrdersByUserId(userId:string): Promise<Order[]>{
+  const orders = await Order.getOrdersByUserId(userId)
+  return orders.length ? orders : (function(){throw "No existe ordenes existentes por parte de este usuario"}())
+}
+
+export async function getOrderById(orderId:string): Promise<Order>{
+  const order = await Order.getOrderById(orderId)
+  return order.data ? order : (function(){throw "La order con ese id no existe"}())
 }

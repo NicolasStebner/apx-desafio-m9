@@ -25,8 +25,15 @@ export class Auth{
   isCodeExpired(){
     const now = new Date()
     const expires = this.data.expires.toDate()
-    return isAfter(now, expires)
+    return isAfter(now, expires) 
+    // && this.data.codeValidated
   }
+
+  async expiresCode(){
+    this.data.codeValidated = false
+    await this.push()
+  }
+
   static async findByEmail(email: string){
     const cleanEmail = this.cleanEmail(email)
     const results = await collection.where("email","==",cleanEmail).get()
