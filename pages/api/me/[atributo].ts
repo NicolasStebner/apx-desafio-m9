@@ -7,8 +7,13 @@ import type { NextApiRequest, NextApiResponse } from "next"
 // al que pertenezca el token usado en el request.
 
 async function handler(req: NextApiRequest, res: NextApiResponse, token){
+  const atributo = req.query
+  const atributoStringifeado = JSON.stringify(atributo)
+  const atributoParseado = JSON.parse(atributoStringifeado)
+  const atributoPosta = atributoParseado["atributo"]
+
   if(req.method == "PATCH"){
-    const user = await updateAttributeById(token.userId, req.body.data.atributo) 
+    const user = await updateAttributeById(token.userId, atributoPosta, req.body.data.value) 
     res.send(user)
   }
   res.status(405).send({message: "Method Not Allowed"})

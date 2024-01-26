@@ -25,8 +25,7 @@ export class Auth{
   isCodeExpired(){
     const now = new Date()
     const expires = this.data.expires.toDate()
-    return isAfter(now, expires) 
-    // && this.data.codeValidated
+    return !this.data.codeValidated || isAfter(now, expires)
   }
 
   async expiresCode(){

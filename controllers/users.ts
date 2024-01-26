@@ -19,10 +19,11 @@ export async function updateUserById(id:string, data): Promise<any>{
   throw "No existe usuario con ese id"
 }
 
-export async function updateAttributeById(id:string, atributo:string): Promise<any>{
+export async function updateAttributeById(id:string, atributo:string, value:any): Promise<User>{
   const user = new User(id)
+  await user.pull() //traigo toda la data
   if(user){
-    user.data[atributo] = atributo
+    user.data[atributo] = value
     await user.push()
     return user
   }

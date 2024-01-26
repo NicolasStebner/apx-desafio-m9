@@ -34,8 +34,9 @@ export async function sendCode(email: string) {
   const twentyMinutesFromNow = addMinutes(now,20)
   auth.data.code = code
   auth.data.expires = twentyMinutesFromNow
+  auth.data.codeValidated = true
   await auth.push()
   //aca deberia enviar el email
   console.log("email enviado a " + email + " con código " + auth.data.code)
-  return true
+  return auth.data.code
 }

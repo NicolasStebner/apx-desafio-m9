@@ -7,7 +7,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse, token){
   if(req.method=="GET"){
     // Devuelve info del user asociado a ese token
     try{
-      const user = getUserById(token.userId)
+      const user = await getUserById(token.userId)
       res.send(user)
     }catch(e){
       res.status(404).send({message: e})
@@ -16,7 +16,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse, token){
   if(req.method=="PATCH"){
     // Permite modificar algunos datos del usuario al que pertenezca el token
     try{
-      const user = updateUserById(token.userId, req.body.data)
+      const user = await updateUserById(token.userId, req.body.data)
       res.send(user)
     }catch(e){
       res.status(404).send({message: e})
