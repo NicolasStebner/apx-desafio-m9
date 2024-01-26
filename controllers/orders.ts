@@ -38,7 +38,7 @@ export async function createOrder(userId:string, productId:string, aditional_inf
       },
       external_reference: order.id,
       notification_url:
-        "https://apx-m9-cap-15-payments.vercel.app/api/webhooks/mercadopago",
+        "apx-desafio-m9-nu.vercel.app/api/ipn/mercadopago",
     },
   });
 
